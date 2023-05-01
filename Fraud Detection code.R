@@ -22,5 +22,28 @@ test <- subset(df, split == FALSE)
 # class ratio initially
 table(train$Class)
 
+library(ggplot2)
 
+
+# checking class imbalance
+table(df$Class)
+
+# class imbalance in percentage
+prop.table(table(df$Class))
+
+common_theme <- theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+
+ggplot(data = df, aes(x = factor(Class), 
+                      y = prop.table(stat(count)), fill = factor(Class),
+                      label = scales::percent(prop.table(stat(count))))) +
+  geom_bar(position = "dodge") + 
+  geom_text(stat = 'count',
+            position = position_dodge(.9), 
+            vjust = -0.5, 
+            size = 3) + 
+  scale_x_discrete(labels = c("No Fraud", "Fraud"))+
+  scale_y_continuous(labels = scales::percent)+
+  labs(x = 'Class', y = 'Percentage') +
+  ggtitle("Distribution of class labels") +
+  common_theme
 
